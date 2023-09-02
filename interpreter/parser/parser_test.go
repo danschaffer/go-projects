@@ -50,7 +50,6 @@ func TestLetStatements(t *testing.T) {
 	if len(program.Statements) != 3 {
 		t.Fatalf("program.Statements does not contain 3 statements. got=%d", len(program.Statements))
 	}
-	//t.Fatalf("\n0: %s\n1: %s\n2: %s\n3: %s\n", program.Statements[0], program.Statements[1], program.Statements[2], program.Statements[3])
 	tests := []struct {
 		expectedIdentifier string
 	}{
@@ -146,6 +145,31 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	}
 	if literal.TokenLiteral() != "5" {
 		t.Errorf("literal.TokenLiteral not %s. got=%s", "5", literal.TokenLiteral())
+	}
+}
+
+func TestBooleanExpression(t *testing.T) {
+	input := "false;"
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+	if len(program.Statements) != 1 {
+		t.Fatalf("program has not enough statements. got =%d", len(program.Statements))
+	}
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+	literal, ok := stmt.Expression.(*ast.Boolean)
+	if !ok {
+		t.Fatalf("exp not *ast.Boolean. got=%T", stmt.Expression)
+	}
+	if literal.Value != false {
+		t.Errorf("literal.Value not %T. got=%T", false, literal.Value)
+	}
+	if literal.TokenLiteral() != "false" {
+		t.Errorf("literal.TokenLiteral not %s. got=%s", "false", literal.TokenLiteral())
 	}
 }
 
