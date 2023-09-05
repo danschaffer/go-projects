@@ -18,6 +18,11 @@ type FunctionLiteral struct {
 	Body       *BlockStatement
 }
 
+type StringLiteral struct {
+	Token token.Token
+	Value string
+}
+
 type Node interface {
 	TokenLiteral() string
 	String() string
@@ -91,6 +96,17 @@ type InfixExpression struct {
 	Left     Expression
 	Operator string
 	Right    Expression
+}
+
+func (sl *StringLiteral) expressionNode() {
+}
+
+func (sl *StringLiteral) TokenLiteral() string {
+	return sl.Token.Literal
+}
+
+func (sl *StringLiteral) String() string {
+	return sl.Token.Literal
 }
 
 func (ce *CallExpression) expressionNode() {
