@@ -6,6 +6,12 @@ import (
 	"strings"
 )
 
+type IndexExpression struct {
+	Token token.Token
+	Left  Expression
+	Index Expression
+}
+
 type CallExpression struct {
 	Token     token.Token
 	Function  Expression
@@ -16,6 +22,11 @@ type FunctionLiteral struct {
 	Token      token.Token
 	Parameters []*Identifier
 	Body       *BlockStatement
+}
+
+type ArrayLiteral struct {
+	Token    token.Token
+	Elements []Expression
 }
 
 type StringLiteral struct {
@@ -98,8 +109,41 @@ type InfixExpression struct {
 	Right    Expression
 }
 
-func (sl *StringLiteral) expressionNode() {
+func (ie *IndexExpression) expressionNode() {}
+
+func (ie *IndexExpression) TokenLiteral() string {
+	return ie.Token.Literal
 }
+
+func (ie *IndexExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(ie.Left.String())
+	out.WriteString("[")
+	out.WriteString(ie.Index.String())
+	out.WriteString("]")
+	return out.String()
+}
+
+func (al *ArrayLiteral) expressionNode() {}
+
+func (al *ArrayLiteral) TokenLiteral() string {
+	return al.Token.Literal
+}
+
+func (al *ArrayLiteral) String() string {
+	var out bytes.Buffer
+	elements := []string{}
+	for _, el := range al.Elements {
+		elements = append(elements, el.String())
+	}
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+	return out.String()
+}
+
+func (sl *StringLiteral) expressionNode() {}
 
 func (sl *StringLiteral) TokenLiteral() string {
 	return sl.Token.Literal
@@ -109,8 +153,7 @@ func (sl *StringLiteral) String() string {
 	return sl.Token.Literal
 }
 
-func (ce *CallExpression) expressionNode() {
-}
+func (ce *CallExpression) expressionNode() {}
 
 func (ce *CallExpression) TokenLiteral() string {
 	return ce.Token.Literal
@@ -129,8 +172,7 @@ func (ce *CallExpression) String() string {
 	return out.String()
 }
 
-func (fl *FunctionLiteral) expressionNode() {
-}
+func (fl *FunctionLiteral) expressionNode() {}
 
 func (fl *FunctionLiteral) TokenLiteral() string {
 	return fl.Token.Literal
@@ -150,8 +192,7 @@ func (fl *FunctionLiteral) String() string {
 	return out.String()
 }
 
-func (bs *BlockStatement) statementNode() {
-}
+func (bs *BlockStatement) statementNode() {}
 
 func (bs *BlockStatement) TokenLiteral() string {
 	return bs.Token.Literal
@@ -165,8 +206,7 @@ func (bs *BlockStatement) String() string {
 	return out.String()
 }
 
-func (ie *IfExpression) expressionNode() {
-}
+func (ie *IfExpression) expressionNode() {}
 
 func (ie *IfExpression) TokenLiteral() string {
 	return ie.Token.Literal
@@ -185,8 +225,7 @@ func (ie *IfExpression) String() string {
 	return out.String()
 }
 
-func (b *Boolean) expressionNode() {
-}
+func (b *Boolean) expressionNode() {}
 
 func (b *Boolean) TokenLiteral() string {
 	return b.Token.Literal
@@ -196,11 +235,9 @@ func (b *Boolean) String() string {
 	return b.Token.Literal
 }
 
-func (pe *PrefixExpression) expressionNode() {
-}
+func (pe *PrefixExpression) expressionNode() {}
 
-func (ie *InfixExpression) expressionNode() {
-}
+func (ie *InfixExpression) expressionNode() {}
 
 func (ie *InfixExpression) TokenLiteral() string {
 	return ie.Token.Literal
@@ -229,15 +266,13 @@ func (pe *PrefixExpression) String() string {
 	return out.String()
 }
 
-func (il *IntegerLiteral) expressionNode() {
-}
+func (il *IntegerLiteral) expressionNode() {}
 
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 
 func (il *IntegerLiteral) String() string { return il.Token.Literal }
 
-func (es *ExpressionStatement) statementNode() {
-}
+func (es *ExpressionStatement) statementNode() {}
 
 func (es *ExpressionStatement) TokenLiteral() string {
 	return es.Token.Literal
@@ -266,8 +301,7 @@ func (p *Program) String() string {
 	return out.String()
 }
 
-func (ls *LetStatement) statementNode() {
-}
+func (ls *LetStatement) statementNode() {}
 
 func (ls *LetStatement) TokenLiteral() string {
 	return ls.Token.Literal
@@ -285,8 +319,7 @@ func (ls *LetStatement) String() string {
 	return out.String()
 }
 
-func (i *Identifier) expressionNode() {
-}
+func (i *Identifier) expressionNode() {}
 
 func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
@@ -296,8 +329,7 @@ func (i *Identifier) String() string {
 	return i.Value
 }
 
-func (rs *ReturnStatement) statementNode() {
-}
+func (rs *ReturnStatement) statementNode() {}
 
 func (rs *ReturnStatement) TokenLiteral() string {
 	return rs.Token.Literal

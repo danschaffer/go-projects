@@ -24,6 +24,8 @@ const (
 	SLASH     = "/"
 	GT        = ">"
 	LT        = "<"
+	LBRACKET  = "["
+	RBRACKET  = "]"
 	LPAREN    = "("
 	RPAREN    = ")"
 	LBRACE    = "{"
